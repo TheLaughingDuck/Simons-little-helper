@@ -1,3 +1,20 @@
+# Simons little helper
+A discord bot that helps out with various things, mainly sending regular reminders.
+
+## Command structure
+The command structure is located in branches.py, and based on tree-like functions. In the list below, functions are underlined, and their respective sub-brances (in the form of if-statements) are written in cursive.
+
+* <u>bot</u>
+    - <u>remind</u>
+        - *remove*
+        - *show*
+        - *create*
+        - *help*
+    - <u>plot</u>
+    - <u>hello</u>
+
+
+
 # Default-DiscordBot
 
 ## Introduction and Purpose
