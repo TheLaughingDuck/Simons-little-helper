@@ -1,5 +1,6 @@
 import discord
 import os
+import branches
 
 #Create an instance of a client
 #Intents specification required apparently
@@ -21,10 +22,15 @@ async def on_ready():
 async def on_message(message):
   if(message.author == client.user):
     return
+  
+  # INTERACT WITH COMMANDS
+  if message.content.startswith("bot"):
+    #Send the content to bot() for interpretation
+    output = branches.bot(message.content)
 
-  # GREET A USER
-  if message.content == 'hello':
-    await message.channel.send("Hello!")
+    # Print the output from the reminder function
+    # This should be a bot message later on
+    print(output)
 
   # PRESENT THE AVAILABLE COMMANDS
   if message.content == "help":
