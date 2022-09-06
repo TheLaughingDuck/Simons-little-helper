@@ -14,6 +14,18 @@ def advance(commands):
     except StopIteration:
         return None
 
+# Function to gather up remaining commands and notify the user
+def unknown_commands(current_command, commands):
+    unknowns = []            
+    while current_command != None:
+        unknowns.append(current_command)
+        current_command = advance(commands)
+    
+    if len(unknowns) > 1:
+        return("Multiple unknown commands: " + "\"" + "\", \"".join(unknowns) + "\"")
+    else:
+        return("Unknown command: " + "\"" + unknowns[0] + "\"")
+
 
 # MASTER node
 def bot(text):
@@ -55,7 +67,7 @@ def bot(text):
         help_message += "help: prints this message"
         return(help_message)
     
-    return("Error. Program should not have arrived here.")
+    return(unknown_commands(current_command, commands))
 
 
 # REMIND branch
@@ -114,15 +126,7 @@ def remind(commands):
     
     # DEALING WITH UNKNOWN COMMANDS
     #at this point, anything useful should have been caught already
-    unknowns = []            
-    while current_command != None:
-        unknowns.append(current_command)
-        current_command = advance(commands)
-    
-    if len(unknowns) > 1:
-        return("Multiple unknown commands: " + "\"" + "\", \"".join(unknowns) + "\"")
-    else:
-        return("Unknown command: " + "\"" + unknowns[0] + "\"")
+    return unknown_commands(current_command, commands)
 
 
 # PLOT branch
