@@ -1,5 +1,6 @@
 import discord
 import os
+from dotenv import load_dotenv, dotenv_values
 import branches
 
 #Create an instance of a client
@@ -13,8 +14,8 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print('I have logged in as {0.user}'.format(client))
     
-    #channel = client.get_channel() #Put "channel-number" in parentheses
-    #await channel.send("I have been deployed!")
+    channel = client.get_channel(997984431883173958) #Put "channel-number" in parentheses
+    await channel.send("I have been deployed!")
 
 
 # EVENT on MESSAGE
@@ -30,7 +31,8 @@ async def on_message(message):
 
     # Print the output from the reminder function
     # This should be a bot message later on
-    print(output)
+    #print(output)
+    await message.channel.send(output)
 
   # PRESENT THE AVAILABLE COMMANDS
   if message.content == "help":
@@ -43,4 +45,5 @@ async def on_message(message):
 
 
 # RUN the CLIENT
-#client.run(os.environ["KEY1"], bot=True)
+load_dotenv()
+client.run(os.getenv("KEY1"), bot=True)

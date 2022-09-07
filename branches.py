@@ -1,5 +1,6 @@
 import re
 import datetime
+import gsheet
 
 '''
 This file contains functions for the specific branches and sub-brances
@@ -86,7 +87,10 @@ def remind(commands):
     
     # SHOW REMINDER sub-branch
     if current_command == "show":
-        #Extend here
+        current_command = advance(commands)
+        
+        #return(gsheet.show())
+        
         return("I will show")
 
     # CREATE REMINDER sub-branch
@@ -111,9 +115,10 @@ def remind(commands):
         #Deal with the rest of the create reminder branch
 
         #HERE is where we should do the actual creating of the reminder
+        gsheet.create(remind_variables[1], remind_variables[0], "None")
 
         # Send information back so that bot can notify user
-        return("I will create reminder on " + remind_variables[0] + " called " + remind_variables[1])
+        return("I have created a reminder on " + remind_variables[0] + " called " + remind_variables[1])
     
     # REMINDER HELP Sub-branch
     if current_command == "help":
@@ -146,9 +151,9 @@ def hello(commands):
 
 
 # For continuous testing
-input_message = ""
-print("Type \"exit testing\" to exit program.")
-while input_message != "exit testing":
-    input_message = input(">>")
-    print(bot(input_message))
+#input_message = ""
+#print("Type \"exit testing\" to exit program.")
+#while input_message != "exit testing":
+#   input_message = input(">>")
+#    print(bot(input_message))
 
