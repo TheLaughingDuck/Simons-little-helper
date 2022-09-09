@@ -47,4 +47,36 @@ def create(Title, Date, Type=None):
 
     return("I have created a reminder!")
 
-#create("test05", "2022-09-15")
+
+def show(Nope=None, type=None):
+    '''Shows the current Reminders'''
+    '''Show a table of the reminders'''
+    
+    # Extract table from google Sheet
+    Table = {}
+    Table["Title"] = sheet.col_values(1)[1:]
+    Table["Type"] = sheet.col_values(2)[1:]
+    Table["Date"] = sheet.col_values(3)[1:]
+    Table["id"] = sheet.col_values(4)[1:]
+
+    myDF = pd.DataFrame(Table)
+
+    #Filter out the undesired types. Format DataFrame
+    if type != None:
+        #User wants opposite of type
+        if Nope == True:
+            myDF = myDF[myDF.Type != type]
+        
+        #User wants type
+        elif Nope == False or Nope == None:
+            myDF = myDF[myDF.Type == type]
+        else:
+            return("I don't understand. I should not have gotten here.")
+        #myDF = myDF[myDF.Type ==]
+    #else: show everything
+
+    #Check row length
+    if len(myDF.index) > 10:
+        return(["Row count was > 10: will return only 10 rows.", myDF.head(10)])
+    else:
+        return(myDF.head())
