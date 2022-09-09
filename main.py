@@ -5,6 +5,7 @@ import branches
 
 import datetime
 import asyncio
+import gsheet
 
 #Create an instance of a client
 #Intents specification required apparently
@@ -12,14 +13,19 @@ intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
 # CHANNELS
-dev_channel = client.get_channel(997984431883173958)
-remind_channel = client.get_channel(1014166019411038210) #"Production"
+#dev_channel = client.get_channel(997984431883173958)
+#remind_channel = client.get_channel(1014166019411038210) #"Production"
 
 
 # EVENT on START
 @client.event
 async def on_ready():
     print('I have logged in as {0.user}'.format(client))
+
+    #Channels?
+    dev_channel = client.get_channel(997984431883173958)
+    #remind_channel = client.get_channel(1014166019411038210) #"Production"
+
     await dev_channel.send("I have been deployed!")
   	#channel = client.get_channel(997984431883173958) #Put "channel-number" in parentheses
 
@@ -30,14 +36,19 @@ async def timer():
 
     while True:
         timenow = datetime.datetime.now()
-        if timenow.hour == 15 and timenow.minute == 50:
+        if timenow.hour == 7 and timenow.minute == 0:
             if not msg_sent:
-                await dev_channel.send("Reminder!") #Change to remind_channel
+                messages = gsheet.send_reminders()
+
+                for i in messages:
+                    dev_channel = client.get_channel(997984431883173958)
+                    await dev_channel.send(i) #Change to remind_channel
                 msg_sent = True
+
             else:
                 msg_sent = False
         
-        await asyncio.sleep(5) #Seconds
+        await asyncio.sleep(40) #Unit: Seconds
 
 
 

@@ -33,7 +33,7 @@ def send_reminders():
 
     myDF = get_reminders()
 
-    remind_list = [] #Indexes of the reminders that should be sent
+    messages = [] #Fill up with reminders for the user
     today = datetime.datetime.today()
     today = datetime.datetime(today.year, today.month, today.day, 12, 0)
 
@@ -51,18 +51,23 @@ def send_reminders():
 
         ##Check 30 days
         if(difference.days <= 30 and difference.days > 10):
-            print("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
+            messages.append("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
+            #print("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
             #await channel.send("It is " + i[0] + "'s birthday in " + str(difference.days) + "days!")
         
         ##Check 10 days
         if(difference.days <= 10 and difference.days > 0):
-            print("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
+            messages.append("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
+            #print("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
             #await channel.send("It is " + i[0] + "'s birthday in " + str(difference.days) + "days!")
 
         ##Check today
         if(DOB.day == today.day and DOB.month == today.month):
-            print("It is " + myDF.T[i]["Title"] + "'s birthday today!")
+            messages.append("It is " + myDF.T[i]["Title"] + "'s birthday today!")
+            #print("It is " + myDF.T[i]["Title"] + "'s birthday today!")
             #await channel.send("It is " + i[0] + "'s birthday today!")
+    
+    return messages
 
 #send_reminders()
 
