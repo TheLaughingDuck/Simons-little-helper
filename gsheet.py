@@ -2,6 +2,8 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
+import datetime
+
 # SETUP
 scopes = ['https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/drive']
 
@@ -9,6 +11,60 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name("sheetsKEY.json",
 file = gspread.authorize(credentials) # authenticate the JSON key with gspread
 sheet = file.open("Reminders")
 sheet = sheet.sheet1
+
+
+# GET REMINDERS
+def get_reminders():
+    '''This function retrieves the reminders'''
+    Table = {}
+    Table["Title"] = sheet.col_values(1)[1:]
+    Table["Type"] = sheet.col_values(2)[1:]
+    Table["Date"] = sheet.col_values(3)[1:]
+    Table["id"] = sheet.col_values(4)[1:]
+
+    myDF = pd.DataFrame(Table)
+
+    return(myDF)
+
+# SEND REMINDERS
+def send_reminders():
+    '''This function looks through the table of reminders'''
+    '''and decides weather or not to send reminders'''
+
+    myDF = get_reminders()
+
+    remind_list = [] #Indexes of the reminders that should be sent
+    today = datetime.datetime.today()
+    today = datetime.datetime(today.year, today.month, today.day, 12, 0)
+
+    for i in myDF.T: #Cycle through row indexes (i is a row index)
+        #print(myDF[i]["Title"])
+
+        DOB = datetime.datetime.strptime(myDF.T[i]["Date"], "%Y-%m-%d") #Date Of Birth
+        born_this_year = datetime.datetime(today.year, DOB.month, DOB.day, 12, 0)
+        difference = born_this_year - today
+        
+        #print(str(difference.days) + " and the type: " + str(type(difference.days)))
+        
+        #if myDF.T[i]["Title"] == "Barney":
+            #print("Diff: " + str(difference))
+
+        ##Check 30 days
+        if(difference.days <= 30 and difference.days > 10):
+            print("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
+            #await channel.send("It is " + i[0] + "'s birthday in " + str(difference.days) + "days!")
+        
+        ##Check 10 days
+        if(difference.days <= 10 and difference.days > 0):
+            print("It is " + myDF.T[i]["Title"] + "'s birthday in " + str(difference.days) + " days!")
+            #await channel.send("It is " + i[0] + "'s birthday in " + str(difference.days) + "days!")
+
+        ##Check today
+        if(DOB.day == today.day and DOB.month == today.month):
+            print("It is " + myDF.T[i]["Title"] + "'s birthday today!")
+            #await channel.send("It is " + i[0] + "'s birthday today!")
+
+#send_reminders()
 
 
 # Function for creating a reminder
@@ -51,15 +107,9 @@ def create(Title, Date, Type=None):
 def show(Nope=None, type=None):
     '''Shows the current Reminders'''
     '''Show a table of the reminders'''
-    
-    # Extract table from google Sheet
-    Table = {}
-    Table["Title"] = sheet.col_values(1)[1:]
-    Table["Type"] = sheet.col_values(2)[1:]
-    Table["Date"] = sheet.col_values(3)[1:]
-    Table["id"] = sheet.col_values(4)[1:]
 
-    myDF = pd.DataFrame(Table)
+    #Retrieve reminders from the google sheet
+    myDF = get_reminders()
 
     #Filter out the undesired types. Format DataFrame
     if type != None:
